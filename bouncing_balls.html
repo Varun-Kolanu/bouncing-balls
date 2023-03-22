@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screensaver</title>
+</head>
+<body>
+    <canvas></canvas>
+    <script>
+        let canvas = document.querySelector("canvas");
+        let c = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        //OOPS:
+        //Defining the class:
+        function Circle(x,y,r,dx,dy,colr,colg,colb) {
+            this.x = x;
+            this.y = y;
+            this.r = r;
+            this.dx=dx;
+            this.dy=dy;
+            this.colr=colr;
+            this.colg=colg;
+            this.colb=colb;
+            this.draw = () =>
+            {
+                c.beginPath();
+                c.arc(this.x, this.y, this.r, 0, 2*Math.PI, false);
+                c.strokeStyle = `rgb(${colr}, ${colg}, ${colb})`;
+                c.fillStyle = `rgb(${colr}, ${colg}, ${colb})`;
+                c.stroke();
+                c.fill();
+            };
+
+            this.update = () =>
+            {
+                if(this.x >= innerWidth - r || this.x <= r)
+                {
+                    this.dx = this.dx*-1;
+                }
+                if(this.y >= innerHeight - r || this.y <= r)
+                {
+                    this.dy = this.dy* -1;
+                }
+                this.x += this.dx;
+                this.y += this.dy;
+                this.draw();
+            };
+        }
+
+        let circleArray = [];
+        for(let i=0; i<100; i++)
+        {
+            let r = (Math.random() * 20 + 20)
+            let x = (Math.random()*(innerWidth-2*r) + r) ;
+            let y = (Math.random()*(innerHeight-2*r) + r) ;
+            let dx = Math.random()*9 + 1;
+            let dy = Math.random()*9 + 1;
+            let colr = (Math.random()*255);
+            let colg = (Math.random()*255);
+            let colb = (Math.random()*255);
+            circleArray.push(new Circle(x,y,r,dx,dy,colr,colg,colb));
+        }
+
+        function animate3() {
+            requestAnimationFrame(animate3);
+            c.clearRect(0,0,innerWidth,innerHeight);
+            for(let i=0; i<circleArray.length; i++)
+            {
+                circleArray[i].update();
+            }
+        }
+        animate3();
+    </script>
+</body>
+</html>
